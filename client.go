@@ -6,28 +6,29 @@ import (
 	"log"
 	"time"
 
-	pb "./payments/payments.pb.go"
+	pb "github.com/jordancalder/payments"
 
 	"google.golang.org/grpc"
 )
 
 func printTransactions(client pb.TransactionClient) {
+	empty := &pb.Empty{}
 	log.Printf("printing transactions...")
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
 	defer cancel()
-	stream, err := client.GetTransactionsStream()
+	stream, err := client.GetTransactionsStream(ctx, empty)
 	if err != nil {
 		log.Fatal("didnotdie")
 	}
 	for {
-		feature, err := stream.Recv()
+		transaction, err := stream.Recv()
 		if err == io.EOF {
 			break
 		}
 		if err != nil {
-			log.Fatal("holysmokes")
+			log.Fatalf("Error when calling transactions stream: %s", err)
 		}
-		log.Printf(feature)
+		log.Printf("transaction: %d %s", uint64(transaction.Price), transaction.Name)
 	}
 }
 
