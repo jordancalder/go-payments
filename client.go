@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"io"
 	"log"
 	"time"
 
@@ -22,13 +21,10 @@ func printTransactions(client pb.TransactionClient) {
 	}
 	for {
 		transaction, err := stream.Recv()
-		if err == io.EOF {
-			break
-		}
 		if err != nil {
 			log.Fatalf("Error when calling transactions stream: %s", err)
 		}
-		log.Printf("transaction: %d %s", uint64(transaction.Price), transaction.Name)
+		log.Printf("transaction: %d %d %s", uint32(transaction.Id), uint32(transaction.Price), transaction.Name)
 	}
 }
 
