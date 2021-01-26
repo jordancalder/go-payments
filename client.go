@@ -18,7 +18,7 @@ func printTransactions(client pb.TransactionClient) {
 	defer cancel()
 	stream, err := client.GetTransactionsStream(ctx, empty)
 	if err != nil {
-		log.Fatal("didnotdie")
+		log.Fatal("ohnosuddendeath")
 	}
 	for {
 		transaction, err := stream.Recv()
